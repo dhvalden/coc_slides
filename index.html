@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>11th of October 2023</title>
+
+<link rel="stylesheet" href="dist/reset.css">
+<link rel="stylesheet" href="dist/reveal.css">
+<link rel="stylesheet" href="dist/theme/oxuni.css">
+
+<!-- Theme used for syntax highlighted code -->
+<link rel="stylesheet" href="plugin/highlight/monokai.css">
+</head>
+<body>
+<div class="reveal">
+	<div class="slides">
+		<!-- Cost of Care Section -->
+		<section data-background-image="./imgs/oxweb-logo-rect.svg" data-background-size="1000px" data-background-position="50% 50%"  data-background-opacity=".1">
+			<section>
+			<h3><b><em>Cost of Care:</em></b></h3>
+			Estimating structural inequalities in carers income.
+			<small>
+				<p>
+				<b>
+					Daniel Valdenegro<sup>1</sup><br>
+					Charles Rahal<sup>1</sup><br>
+					Yanan Zhang<sup>2</sup><br>
+					Maria Petrillo<sup>3</sup><br>
+					Matthew Bennett<sup>3</sup><br>
+					Gwilym B. Pryce<sup>3</sup><br>
+				</b>
+				</p>
+			</small>
+			<small>
+				<p>
+				<sup>1</sup>Leverhulme Centre for Demographic Science and the Centre for Care, University of Oxford<br>
+				<sup>2</sup>Oxford Institute of Population Ageing, University of Oxford<br>
+				<sup>3</sup>Centre for Care, University of Sheffield<br>
+							</p>
+			</small>
+			</section>
+			<section>
+			<h3>Antecedents</h3>
+			</section>
+			<section>
+			<h3>The issue</h3>
+			<ul>
+				<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<li>Low fertility rates coupled with advancements in longevity have
+					simultaneously increased demand for -- and reduced the supply of -- social care.</li>
+				</span>
+				<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<li>The demand of care is being suplied by informal unpaid carers.</li>
+				</span>
+				<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<li>We lack reliable, causal estimates of the effect that providing this
+					care has, and what optimal policy responses should be.</li>
+				</span>
+				<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<li>We also lack an understanding of how unequal these inter-sectional costs might be.</li>
+				</span>
+			</ul>
+			</section>
+			<section>
+			<h3>Research Questions</h3>
+			<ul>
+				<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<li>What are the differences in net household income in real terms
+					between carers and non-carers across time?</li>
+				</span>
+				<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<li>How do these effects aggregate up from the micro,
+					to the meso and macro levels?</li>
+				</span>
+				<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<li>How are these effects stratified across age, gender,
+					ethnicity or geo-spatial location?</li>
+				</span>
+				<span style="font-size:1em" class="fragment fade-in">
+				<li><span class="fragment highlight-red">How</span> do we estimate this!?</li>
+				</span>
+			</ul>
+			</section>
+
+			<section><h3>Data</h3></section>
+					<section>
+			<h4>UKHLS Survey</h4>
+			<ul>
+				<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<li>Large, decade long, representative household panel study, covering around 40K households.</li>
+				</span>
+				<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<li>Collects information about income of the individuals as well as their care responsabilities.</li>
+				</span>
+				<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<li>Provides plenty of demographic variables to stratify.</li>
+				</span>
+				<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<li>Provides low level geo-spatial data of the household.</li>
+				</span>
+				<span style="font-size:1em" class="fragment fade-in">
+				<li> So far so good...</li>
+				</span>
+			</ul>
+			</section>
+			
+			<section>
+			<h3>Method</h3>
+			</section>
+			<section data-auto-animate>
+			<p>We draw inspiration from this amazing paper:</p>
+			<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<img src="./imgs/vagni_breen.png"
+				style="height: 500px; margin: 0 auto 4rem auto; background: transparent;">
+			</span>
+			</section>
+					<section data-auto-animate>
+			<p>...Which in turns draw inspiration from this other amazing paper:</p>
+			<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<img src="./imgs/abadie.png"
+				style="height: 500px; margin: 0 auto 4rem auto; background: transparent;">
+			</span>
+			</section>
+			<section data-auto-animate>
+			<h3>So... What is this Synthetic Control Method?</h3>
+			<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<p>Asumming we have time series data from a unit that received some
+				"treatment" at some time "T0", and data from units that didn't recived the treatment,
+				the idea is to create an equivalent "control" unit based on the data from the untreated units.
+				This synthetic control should behave very similar to the trated unit up until the moment of treatment,
+				where it should behave as if nothing has happaned.</p>
+			</span>
+			</section>
+			<section data-auto-animate>
+			<h3>More formally...</h3>
+			<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<p>
+				The synthetic control method proposed that a weighted sum of similar
+				untreated units might aproximate well to an untreated version of our unit of interest:
+				
+				\[
+				\begin{equation}
+				\hat{Y}_{0_{t}}(0) = \mu + \sum^{N}_{i=1}\omega_{i} \cdot Y_{i_{t}}
+				\end{equation}
+				\]
+
+				Meaning that a series of weights $\omega$ for every control units,
+				multiplied to the value of $Y$ of each control unit $i$ at every step $t$
+				will yield the value $\hat{Y}_{0}(0)$ of our synthetic untreated unit for every step $t$.
+				</p>
+			</span>
+			</section>
+			<section data-auto-animate>
+			<h3>More formally...</h3>
+			<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<p>
+				Now, intuitively, the next step is to figure out a way to find the correct
+				weights $\omega_{i}$ and $\mu$. Since we are mostly interested in finding a synthetic
+				control for a treated unit that is equivalent up to the moment of the treatment,
+				we should only take into account the data up to $T_{0}$ to create the weights.
+				More formally, we are interested in finding a vector of weights that minimises the
+				difference between our treated unit and the synthetic control:
+
+				$$
+				\begin{equation}
+				(\hat{\mu}, \hat{\omega}) = \underset{\mu, \omega}{\operatorname{argmin}}
+				\sum_{t=1}^{T_{0}}\left(Y_{0_{t}} - \mu - \sum^{N}_{i=1}\omega_{i} \cdot Y_{i_{t}} \right)^{2}
+				\end{equation}
+				$$
+				</p>
+			</span>
+			</section>
+			<section data-auto-animate>
+			<h3>More formally...</h3>
+			<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<p>
+				The above expression is essentially a least squares solution to the problem.
+				However, there is reason to avoid OLS, one of them being overfitting.
+				One of the ways to prevent such problem is to impose some restrictions:
+
+				$$
+				\begin{equation}
+				(\hat{\mu}, \hat{\omega}) = \underset{\mu, \omega}{\operatorname{argmin}}
+				\sqrt{\sum_{t=1}^{T_{0}}\left(Y_{0_{t}} - \mu - \sum^{N}_{i=1}\omega_{i}
+				\cdot Y_{i_{t}} \right)^{2}} \\ 
+				\end{equation}
+				$$
+
+				$$
+				\textrm{s.t.} \quad \mu=0; \quad \sum^{N}_{i=1}\omega_{i}=1;
+				\quad \textrm{and} \quad \omega_{i} \ge 0 \quad \forall i
+				$$
+				
+				In other words, no intercept, all weights must sum to 1, and no-negative weights.
+				</p>
+			</span>
+			</section>
+			<section data-auto-animate>
+			<h3>A toy example...</h3>
+			<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<p>
+				<pre data-id="code-animation">
+					<code class="hljs python" data-trim data-line-numbers>
+										import random
+										import math
+										import pandas as pd
+										import matplotlib.pyplot as plt
+										
+										def gen_data(steps, cases):
+											X = list(range(1,steps))
+											c = []
+											for i in range(0, cases):
+												y = []
+												py = random.gammavariate(2, 2)
+												for x in X:
+													yi = py + random.gauss(0, 1)
+													py = yi
+													y.append(yi)
+												c.append(y)
+											df = pd.DataFrame(c).T
+											df.columns = [f'c{x}' for x in range(1, cases+1)]
+											t = []
+											py = 0
+											for i, x in enumerate(X):
+												if i <= 50:
+													yi = py + random.gauss(0, 1)
+													py = yi
+												else:
+													yi = py - random.gammavariate(1,1)
+													py = yi
+												t.append(yi)
+											T = pd.Series(t)
+											df['t'] = T
+											return df
+					</code>
+				</pre>
+				</p>
+			</span>
+			</section>
+			<section data-auto-animate>
+			<h3>A toy example...</h3>
+			<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<p>
+				<img src="./imgs/toy_data.png"
+					style="height: 300px; margin: 0 auto 4rem auto; background: transparent;">
+				</p>
+			</span>
+			</section>
+			<section data-auto-animate>
+			<h3>A toy example...</h3>
+			<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<p>
+				<pre data-id="code-animation">
+					<code class="hljs python" data-trim data-line-numbers>
+
+										def argmin_w(W, Y_i, Y_0):
+											return np.sqrt(np.sum((Y_0 - Y_i.dot(W))**2))
+											
+										
+										def get_w(Y_i, Y_0):
+											w_start = [1/Y_i.shape[1]]*Y_i.shape[1]
+											weights = minimize(partial(argmin_w, Y_i=Y_i, Y_0=Y_0),
+															np.array(w_start),
+															method='SLSQP',
+															constraints=({'type': 'eq',
+																			'fun': lambda x: np.sum(x) - 1}),
+															bounds=[(0.0, 1.0)]*len(w_start),
+															)
+											return weights.x
+										
+										weights = get_w(Y_i, Y_0)
+										
+										synth = df.drop(columns='t').dot(weights)
+					</code>
+				</pre>
+				</p>
+			</span>
+			</section>
+			<section data-auto-animate>
+			<h3>A toy example...</h3>
+			<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<p>
+				<img src="./imgs/toy_synth.png"
+					style="height: 300px; margin: 0 auto 4rem auto; background: transparent;">
+				</p>
+			</span>
+			</section>
+			<section data-auto-animate data-auto-animate-easing="cubic-bezier(0.770, 0.000, 0.175, 1.000)">
+			<h2>Data preparation</h2>
+			<p>Take cases with at least 3 measures before treatment</p>
+			<div class="r-hstack justify-center">
+				<div data-id="box1" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">1</div>
+				<div data-id="box2" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">2</div>
+				<div data-id="box3" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">3</div>
+				<div data-id="box4" style="background: red; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">4</div>
+				<div data-id="box5" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">5</div>
+				<div data-id="box6" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">6</div>
+				<div data-id="box7" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">7</div>
+			</div>
+			</section>
+			<section data-auto-animate data-auto-animate-easing="cubic-bezier(0.770, 0.000, 0.175, 1.000)">
+			<h2>Data preparation</h2>
+			<p>Reindex based on treatment time.</p>
+			<div class="r-hstack justify-center">
+				<div data-id="box1" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-3</div>
+				<div data-id="box2" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-2</div>
+				<div data-id="box3" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-1</div>
+				<div data-id="box4" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">0</div>
+				<div data-id="box5" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">1</div>
+				<div data-id="box6" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">2</div>
+				<div data-id="box7" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">3</div>
+			</div>
+			</section>
+			<section data-auto-animate data-auto-animate-easing="cubic-bezier(0.770, 0.000, 0.175, 1.000)">
+			<h2>Data preparation</h2>
+			<p>Find control cases with the same waves.</p>
+			<div class="r-hstack justify-center">
+				<div data-id="box1" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-3</div>
+				<div data-id="box2" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-2</div>
+				<div data-id="box3" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-1</div>
+				<div data-id="box4" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">0</div>
+				<div data-id="box5" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">1</div>
+				<div data-id="box6" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">2</div>
+				<div data-id="box7" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">3</div>
+			</div>
+			<div class="r-hstack justify-center">
+				<div data-id="sbox1" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-3</div>
+				<div data-id="sbox2" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-2</div>
+				<div data-id="sbox3" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-1</div>
+				<div data-id="sbox4" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">0</div>
+				<div data-id="sbox5" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">1</div>
+				<div data-id="sbox6" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">2</div>
+				<div data-id="sbox7" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">3</div>
+			</div>
+			<div class="r-hstack justify-center">
+				<div data-id="sbox1" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-3</div>
+				<div data-id="sbox2" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-2</div>
+				<div data-id="sbox3" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-1</div>
+				<div data-id="sbox4" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">0</div>
+				<div data-id="sbox5" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">1</div>
+				<div data-id="sbox6" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">2</div>
+				<div data-id="sbox7" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">3</div>
+			</div>
+		</section>
+
+		<section data-auto-animate data-auto-animate-easing="cubic-bezier(0.770, 0.000, 0.175, 1.000)">
+			<h2>Data preparation</h2>
+			<p>Repeat the process for every treated case.</p>
+			<div class="r-hstack justify-left">
+				<div data-id="box1" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-3</div>
+				<div data-id="box2" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-2</div>
+				<div data-id="box3" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-1</div>
+				<div data-id="box4" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">0</div>
+				<div data-id="box5" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">1</div>
+				<div data-id="box6" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">2</div>
+				<div data-id="box7" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">3</div>
+			</div>
+			<div class="r-hstack justify-left">
+				<div data-id="sbox1" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-3</div>
+				<div data-id="sbox2" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-2</div>
+				<div data-id="sbox3" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-1</div>
+				<div data-id="sbox4" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">0</div>
+				<div data-id="sbox5" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">1</div>
+				<div data-id="sbox6" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">2</div>
+				<div data-id="sbox7" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">3</div>
+			</div>
+			<div class="r-hstack justify-left">
+				<div data-id="sbox1" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-3</div>
+				<div data-id="sbox2" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-2</div>
+				<div data-id="sbox3" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-1</div>
+				<div data-id="sbox4" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">0</div>
+				<div data-id="sbox5" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">1</div>
+				<div data-id="sbox6" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">2</div>
+				<div data-id="sbox7" style="background: cyan; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">3</div>
+			</div>
+			<div class="r-hstack justify-left">
+				<div data-id="abox1" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-3</div>
+				<div data-id="abox2" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-2</div>
+				<div data-id="abox3" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-1</div>
+				<div data-id="abox4" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">0</div>
+				<div data-id="abox5" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">1</div>
+				<div data-id="abox6" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">2</div>
+			</div>
+			<div class="r-hstack justify-left">
+				<div data-id="asbox1" style="background: magenta; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-3</div>
+				<div data-id="asbox2" style="background: magenta; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-2</div>
+				<div data-id="asbox3" style="background: magenta; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-1</div>
+				<div data-id="asbox4" style="background: magenta; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">0</div>
+				<div data-id="asbox5" style="background: magenta; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">1</div>
+				<div data-id="asbox6" style="background: magenta; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">2</div>
+			</div>
+			<div class="r-hstack justify-left">
+				<div data-id="asbox1" style="background: magenta; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-3</div>
+				<div data-id="asbox2" style="background: magenta; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-2</div>
+				<div data-id="asbox3" style="background: magenta; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-1</div>
+				<div data-id="asbox4" style="background: magenta; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">0</div>
+				<div data-id="asbox5" style="background: magenta; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">1</div>
+				<div data-id="asbox6" style="background: magenta; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">2</div>
+			</div>
+			<div class="r-hstack justify-left">
+				<div data-id="bbox1" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-4</div>
+				<div data-id="bbox1" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-3</div>
+				<div data-id="bbox2" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-2</div>
+				<div data-id="bbox3" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-1</div>
+				<div data-id="bbox4" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">0</div>
+				<div data-id="bbox5" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">1</div>
+				<div data-id="bbox6" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">2</div>
+				<div data-id="bbox7" style="background: #999; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">3</div>
+			</div>
+			<div class="r-hstack justify-left">
+				<div data-id="bsbox1" style="background: yellow; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-4</div>
+				<div data-id="bsbox1" style="background: yellow; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-3</div>
+				<div data-id="bsbox2" style="background: yellow; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-2</div>
+				<div data-id="bsbox3" style="background: yellow; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-1</div>
+				<div data-id="bsbox4" style="background: yellow; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">0</div>
+				<div data-id="bsbox5" style="background: yellow; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">1</div>
+				<div data-id="bsbox6" style="background: yellow; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">2</div>
+				<div data-id="bsbox7" style="background: yellow; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">3</div>
+			</div>
+			<div class="r-hstack justify-left">
+				<div data-id="bsbox1" style="background: yellow; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-4</div>
+				<div data-id="bsbox1" style="background: yellow; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-3</div>
+				<div data-id="bsbox2" style="background: yellow; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-2</div>
+				<div data-id="bsbox3" style="background: yellow; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">-1</div>
+				<div data-id="bsbox4" style="background: yellow; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">0</div>
+				<div data-id="bsbox5" style="background: yellow; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">1</div>
+				<div data-id="bsbox6" style="background: yellow; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">2</div>
+				<div data-id="bsbox7" style="background: yellow; width: 50px; height: 50px; margin: 1px; border-radius: 5px;">3</div>
+			</div>
+		</section>
+		<section>
+			<p><h3>Results</h3></p>
+		</section>
+		<section data-auto-animate>
+			<p><h4>There is an effect of care responsabilities on income share</h4></p>
+			<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<p>
+				<img src="./imgs/w_incshare_dc_hili.png"
+					style="height: 500px; margin: 0 auto 4rem auto; background: transparent;">
+				</p>
+			</span>
+		</section>
+			<section data-auto-animate>
+			<p><h4>There is an effect of care responsabilities on individual income</h4></p>
+			<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+				<p>
+				<img src="./imgs/w_indinc_dc_hili.png"
+					style="height: 500px; margin: 0 auto 4rem auto; background: transparent;">
+				</p>
+			</span>
+		</section>
+		<section data-auto-animate>
+			<p><h4>There is an effect of care responsabilities on household income</h4></p>
+			<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+			<p>
+			<img src="./imgs/w_hhi_dc_hili.png"
+				style="height: 500px; margin: 0 auto 4rem auto; background: transparent;">
+			</p>
+			</span>
+		</section>
+		<section data-auto-animate>
+			<p><h4>There is an effect of care responsabilities on probability of employment</h4></p>
+			<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+			<p>
+				<img src="./imgs/w_probemp_dc_hili.png"
+				style="height: 500px; margin: 0 auto 4rem auto; background: transparent;">
+			</p>
+			</span>
+		</section>
+		<section data-auto-animate>
+			<p><h4>Some considerations...</h4></p>
+			<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+			<p>
+				<ul>
+					<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+					<li>All the results above are calculated controlling by age, sex, and ethnicity.</li>
+					</span>
+					<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+						<li>All the results above are calculated using the longitudinal weights provided by the UKHLS team.</li>
+					</span>
+					<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+						<li>Probability of employment was calculated crossectionally using a probit model.</li>
+					</span>
+					<span style="font-size:0.7em" class="fragment fade-in-then-semi-out">
+						<li>High and low intensity of care was defined by the amount of hours of care reported by participants in their first report.</li>
+					</span>
+				</ul>
+			</p>
+			</span>
+		</section>
+	</section>
+	<script src="dist/reveal.js"></script>
+	<script src="plugin/notes/notes.js"></script>
+	<script src="plugin/markdown/markdown.js"></script>
+	<script src="plugin/highlight/highlight.js"></script>
+	<script src="plugin/math/math.js"></script>
+<script src="plugin/zoom/zoom.js"></script>
+	<script>
+	// More info about initialization & config:
+	// - https://revealjs.com/initialization/
+	// - https://revealjs.com/config/
+	Reveal.initialize({
+		hash: true,
+
+		// Learn about plugins: https://revealjs.com/plugins/
+		plugins: [ RevealZoom, RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX ]
+	});
+	</script>
+</body>
+</html>
